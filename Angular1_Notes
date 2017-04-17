@@ -1,0 +1,420 @@
+Angular is a javascript library. It is an opinionated MV* frame work. 
+
+Opinionated means the software is limiting and encourages the designer into doing things their way.
+
+Why opinionated software?
+Ans: The best software has vision and it takes sides. you can find the complete discussion on 37signals.com
+
+MV* - M represent Model, V represents view, * means it can be anything like Controller,Presenter or ViewModel etc. Angular uses Controller.
+
+Angular is an open source library developed by google.
+Angular is comprehensive. It has lot of features like two way binding,routers etc.
+Angular developed by keeping testing in mind. It supports both unit and end to end integration tests. Angular team also created a testing framework called karma. This became very popular and it is used for testing the applications that are not even using Angular.
+
+Angular extends HTML by providing custom elements like Directives which are used to interact with DOM. For ex,
+	<input id="username" type="text" focus>
+focus is a custom attribute that tells angular elements to focus when the page loads, but there is a similar attribute called autofocus in HTML5, the problem is that will work only with HTML browsers. With angular it works with much wider browsers.
+
+	<multiStateButton id="button1">
+This one may be a toggle button, it works the way I want it in my application.
+
+	<userTile id="userTile1" user="currentUser">
+This is perhaps a display widget customized to a specific application that displays users in specific manner. All it needs is to pass a user object using the user property created in custom tag.
+
+*****
+Note:
+Angular things of HTML as it had been designed to build applications instead of documents.	
+*****
+Note:
+Web Components and Object.observer are one of the ways that angular is forward thinking.
+
+Angular architecture
+--------------------
+Two way binding
+---------------
+Angular supports two way binding. It means when user updates form fields it is instantly updated to angular model. i.e. In most of the cases you need to watch for specific events and respond to them and then manually update your HTML.
+
+Dirty Checking
+--------------
+You don't put your data in special structures and call getter and setter methods to read and write to your data. you can simply put your data into plain old javascript objects and angular will respond whenever data changes and automatically updates view.
+
+Dependency Injection
+--------------------
+Angular is built on dependency injection. It encapsulates pieces of application and also increases testability.
+
+Angular components
+------------------
+Controller
+----------
+Controllers are essential components in angular. They contain both logic and state.
+
+Views/Directives
+----------------
+This is how users talk to application. Controllers talk to views using both one way and two way bindings. Directives are part of view.
+
+Services
+--------
+These components contain real logic and state of your application. It contains complex business logic. Also, services are place where you want to communicate with the server.
+
+Example
+-------
+<html ng-app="app"> // name of the module
+<head>
+</head>
+<body>
+    <h1 ng-controller="HelloWorldController">{{helloMessage}}</h1>
+    <script src="https://code.angularjs.org/1.4.0/angular.js"></script>
+    <script type="text/javascript">
+        angular.module('app',[]).controller('HelloWorldController',
+        function($scope){
+            $scope.helloMessage="Hello World";
+        }
+        )
+
+    </script>
+</body>
+</html>
+
+Note: angular.module() has two parameters. First one is name of the module and second parameter is the list of modules it depends on. In the above example it is empty array because it is not depending on any modules.
+
+Angular Controllers and Scope
+-----------------------------
+Controllers primary responsibility is to create scope object. The scope object communicates with the view. view can bind properties and functions on the scope. It means events on the view can call methods on a scope.
+
+Data passes from controller to scope and from scope back and forth to the view. Scope is used to expose the model to the view, but scope is not the model. If you want to modify the model, use methods on scope perhaps in response to the events on the view. Also, we can use two way bindings to modify the model.
+
+Here is the sample Controller. The first argument is the name of the controller. The second argument is a function which takes a scope object and call functions on the scope object.
+
+eventsApp.controller('EventController',function ($scope) {
+    //In real application you retrieve this information from server
+    $scope.event = {
+        name : 'Angular App',
+        date : '03/06/2017',
+        time : '3:00pm',
+        location : {
+            address : 'Bagmane tech park',
+            city : 'Bangalore',
+            state : 'Karnataka'
+        },
+        url : 'img/angularjs-logo.png',
+        sessions : [
+            {
+                name : 'Directives Master Class',
+                creatorName : 'Bob smith',
+                duration : '1 hr',
+                level: 'Advanced',
+                abstract: ' Learning about Directives',
+                upVoteCount : 0
+            },
+            {
+                name : 'Scopes for fun and profit',
+                creatorName : 'John Doe',
+                duration : '30 min',
+                level: 'Advanced',
+                abstract: ' Learning about Scopes',
+                upVoteCount : 0
+            }
+        ]
+    }
+});
+
+
+To display repeated information angular has ng-repeat Directive. For ex,
+	<li ng-repeat="session in event.sessions">
+		{{session.name}}
+	</li>
+
+Handling Events
+---------------
+Lets say we have button which increases upVoteCount like this.
+<li ng-repeat="session in event.sessions">
+	<div class="votingButton" ng-click="upVoteSession(session)">
+        <i class="icon-chevron-up icon-white"></i>
+    </div>
+    <div class="votingButton"  ng-click="downVoteSession(session)">
+        <i class="icon-chevron-down"></i>
+    </div>
+</li>
+
+Note: Angular needs no id's here, because it takes the session from the section of page and pass it to the controller. It helps in reducing the usage of id's and run into issues.
+ 
+These two methods should be present on controller. Here is the controller code.
+
+eventsApp.controller('EventController',function ($scope) {
+
+    $scope.upVoteSession = function(session){
+        session.upVoteCount++;
+    }
+
+    $scope.downVoteSession = function(session){
+        session.upVoteCount--;
+    }
+});
+
+Q&A
+---
+can you use basic javascript objects as model in angular?
+Ans: yes
+what is the markup indicator for binding data to a view?
+Ans: Double curly braces. For ex, {{event.name}}
+which directive to use for binding an image's source?
+Ans: ng-src . This directive also allows delay rendering an image until angular processes and replaces the image with correct value.
+
+Built-in Directives
+-------------------
+According to angular directives are a way to teach HTML new trics. Essentially directives give HTML new functionality. Angular parses HTML and looks for directives and takes action based on what it finds. There are four ways to define directives.
+1)<ng-form/> // directive is tag itself.
+2)<div ng-form/> // directive is an attribute of a tag here.
+3)<div class="ng-form" /> // directive can be written as a class.
+
+Note: Not all directives can be written in all 3 ways. 4th way to write directive is as an HTML comment.
+
+Event Directives
+----------------
+Few of them we have already seen. Here is a list of angular event directives.
+ngClick
+ngDblClick
+ngMouseDown
+ngMouseenter
+ngMouseleave
+ngMousemove
+ngMouseover
+ngMouseup
+
+Note: All the above events respond to simple mouse events. 
+
+ngChange --> It will listen to change events on lot of HTML input events.For ex,
+	<input type="checkbox" ng-change="handleChange()" ng-model="property"/>
+
+This directive is going to call handleChange() whenever the checkbox is checked and unchecked.
+Note: This directive needs nd-model directive also as an attribute.
+
+Other Directives
+----------------
+ngApp // we used this already in html tag as ng-app.
+ngBind // Instead of binding data to view using double curly braces we can use ngBind like this.
+	<h2 ng-bind="event.name"></h2>
+ngBindTemplate // using ngBindTemplate we can display multiple elements like this.
+	<h2 ng-bind-template="{{event.name}} {{event.date}}"></h2>
+ngBindHTML // To add this directive we need the following changes.
+1)Add angular-santize.js library to the HTML like this.
+	<script src="lib/angular/angular-sanitize.js"></script>
+2)Add the module in the app declaration like this.
+	var eventsApp = angular.module('eventsApp', ['ngSanitize']);
+3)Use the directive in HTML like this.
+	<div ng-bind-html="snippet"></div>
+4)Declare the variable in controller to add some html snippet like this.
+	$scope.snippet='<span style="color:red">Hi There</span>';
+
+Note:ngBindHTML removes the coloring and displays message without styling. This is what angular sanitize does.
+ 
+ngHide/ngShow // These directives are used to show/hide data. For this, make HTML changes like this:
+
+	<h2 ng-show="boolValue">Show This</h2>
+	<h2 ng-hide="boolValue">Hide This</h2>
+Add variable boolValue in controller like this.
+	$scope.boolValue=true;
+	
+Note:	
+Angular encourages to manipulates DOM using directives like ngHide/ngShow and never encourages to manipulate it in controller.
+
+ngCloak
+-------
+This directive will allow hide portions of your HTML or all of your page until angular has a chance to run and go through and parse the HTML and replace the directives or the bindings with the actual values that is supposed to display. For ex you can this to body tag like this,
+	<body ng-cloak>
+You need to modify your css like this:
+[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{
+	display:none;
+}
+
+Note: This is useful if you have have slow machine, which will avoid a flash of unbound HTML.
+
+ngStyle
+-------
+This directive is straight forward. For ex,
+	<div ng-bind-html="snippet" ng-style="myStyle"></div>
+Add this myStyle variable in the controller like this.
+	$scope.myStyle={color:'red'}
+
+ngClass/ngClassEven/ngClassodd
+------------------------------
+ngClassEven/ngClassOdd are same as ngClass but when you use ng-repeat those class properties are applied on even and odd rows accordingly. For ex,
+	<div ng-class="myClass" ng-bind-html="snippet">Hi</div>
+
+Controller changes like this,	
+	$scope.myClass="blue";
+
+Add the class to css file like this.	
+	.blue {
+		color:blue;
+	}
+
+The following directives will either add or remove the respective attributes when set them to true or false values.
+ngDisabled
+ngChecked
+ngMultiple
+ngReadonly
+ngSelected
+
+For ex, let us see the usage of ngDisabled.
+	<button class="btn" ng-disabled="buttonDisabled">Disabled</button>
+In controller, add the buttonDisabled field like this.
+	$scope.buttonDisabled = true;
+
+ngForm
+------
+The reason behind using ngForm directive is we can nest one ngForm directive inside another unlike html form tag.
+
+ngSubmit
+--------
+It is used for submitting the form. Usage:
+	<form ng-submit="myFunc()">
+
+ngHref/ngSrc
+------------
+Angular holds loading of page until anchor or source image is loaded.
+
+ngNonBindable
+-------------
+This directive tells angular not to bind and parse the HTML. For ex, The following angular expression prints 3.
+	<div>{{1 + 2}}</div>
+If use non bindable it prints {{1 + 2}}.
+	<div ng-non-bindable>{{1 + 2}}</div>
+	
+Q&A
+---
+what does ngForm allows to do?
+Ans: It allows nested forms.
+why do we need ngDisabled directive?
+Ans:Because of ambiguties in HTML specification, some browsers actually won't disable the elements.
+
+Note: Older versions of IE has polyfill JSON.stringify() and custom ng directive issues.
+
+Expressions
+-----------
+Expressions are javascript like code snippets can be put inside of HTML page. They are generally placed inside of bindings and typically in double curly braces like {{ expression }}. There can be variable names also like {{ event.name }} or mathematical expressions like {{ amount*100 }}. To print second element of an array a=[1,2,3] we can use {{ a[1] }}.
+
+Note: Expressions won't support all javascript syntax. For ex, {{ Math.min(2,3)}} won't work. 
+
+Filters
+-------
+Filters are a way to tell angular to modify something for output. Filters typically do three things.
+1)Formatting
+2)Sorting dataset
+3)Filtering dataset
+	
+Note: Filters are dynamic. i.e. If you change the filter, the records that are outputted are automatically updated and the HTML is automatically adjusted.
+
+Using Filter
+------------
+{{ expression | Filter }}
+
+Built-in Filters
+----------------
+Angular provides two filters to work with Strings. They are uppercase, lowercase. Usage:
+	<h2>{{event.name | uppercase}}</h2>
+
+Angular provides two filters to work with numbers. They are number,currency. Usage:
+	<div><strong>Price:</strong> {{ 34 | currency }}</div> // prints in default currency format
+	<div><strong>Number:</strong> {{ 3.143567 | number:2 }}</div> //prints two decimal values.
+
+Angular provide a filter for date: usage
+	<div><strong>Date:</strong> {{ event.date | date:'medium'}}</div> //prints two decimal values.
+Controller code change to milliseconds value like 'date : 1488963049361'.
+	
+Other formats with date also possible like 
+	<div><strong>Date:</strong> {{ event.date | date:'mediumDate'}}</div>
+
+Angular provides json filter for debugging. usage:
+	<div>{{ {a:3,b:'hi'} | json }}</div>
+o/p of the above will be formatted like this for easy debugging.
+	{ "a": 3, "b": "hi" }
+
+Angular provides 3 built-in filters used with ng-repeat directive to modify the dataset in that. They are 
+orderBy // allows to order data by a certain field.
+limitTo // to limit records by certain number.
+filter // used to filter dataset by an expression.
+
+Usage of orderBy:
+	<li ng-repeat="session in event.sessions | orderBy:sortorder">
+Lets define sortorder in the controller like this.
+	$scope.sortorder = '-upVoteCount'; // This will change the order of sessions based on descending order of upVoteCount.
+	
+We can do the above in otherway. create a dropdown and select the sortorder based on the user selection of drop down. For ex,
+	<select ng-model="sortorder" class="input-small">
+		<option selected value="name">Name</option>
+		<option value="-upVoteCount">Votes</option>
+	</select>	
+Lets define sortorder in the controller like this.
+	$scope.sortorder = 'name';
+
+Usage of limitTo
+----------------
+Suppose you want to display only two sessions at a time. You can write this like this:
+	<li ng-repeat="session in event.sessions | orderBy:sortorder | limitTo:2">
+
+Usage of filter
+---------------
+Suppose we want to filter the sessions using difficulty level. First create another dropdown to select difficulty level like this.
+
+	<select ng-model="query" class="input-medium">
+		<option selected value="">All</option>
+		<option selected value="Introductory">Introductory</option>
+		<option selected value="Medium">Medium</option>
+		<option selected value="Advanced">Advanced</option>
+	</select>
+
+Lets add the query filter with ng-repeat like this.
+	<li ng-repeat="session in event.sessions | orderBy:sortorder | limitTo:2 | filter:query">
+
+Note: If user selects Advanced, then angular searches for the whole session object for the word Advanced, it won't check for the specific field name. If you want angular to select from a particular field(In this example field name is level) value to match, then
+	<select ng-model="query.level" class="input-medium">
+		<option selected value="">All</option>
+		<option selected value="Introductory">Introductory</option>
+		<option selected value="Medium">Medium</option>
+		<option selected value="Advanced">Advanced</option>
+	</select>
+
+Custom Filters
+--------------
+Writing custom filters is easy. First write a method named filter on module like this.
+	module.filter();
+This method will take two arguments one is name of the filter and another argument is a function which returns another function. For ex,
+	modulename.filter('myFilter',function(){
+		return function(input /*,filter parameters*/){
+		//modify input
+		return modifiedOutput;
+		}
+	});	
+
+Note: The returning function is the actual filter that takes input parameter to the filter plus any additional parameters it needs.
+
+Example: For example, we want to filter the durations data based on the number and convert it to string. Here is the filter code.
+	eventsApp.filter('durations',function () {
+		return function (duration) {
+			switch (duration){
+				case 1:
+					return "Half an Hour";
+				case 2:
+					return "One Hour";
+				case 3:
+					return "Half Day";
+				case 4:
+					return "One Day";
+			}
+		}
+	});	
+
+Lets make HTML changes like this.	
+	<span>Duration : {{session.duration | durations}}</span><br>
+
+Two way binding
+---------------
+Angular allows one more way for user to interact.i.e. Two way Binding. Two way Binding uses typicall form controls and keeps your model uptodate automatically. This is very convenient. you don't need to use any form controls to read the data from model or to update the data into model. This capability revolves around ngModel directive.
+*****
+ngModel directive works with three different HTML elements. They are input,select and textarea.
+Ex:
+	<input type="text" ng-model="object.property/> 
+	<input type="text" ng-model="property/>
+	<input type="text" ng-model="object.container.property/> 
+	
