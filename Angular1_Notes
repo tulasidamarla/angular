@@ -5,17 +5,17 @@ Opinionated means the software is limiting and encourages the designer into doin
 Why opinionated software?
 Ans: The best software has vision and it takes sides. you can find the complete discussion on 37signals.com
 
-MV* - M represent Model, V represents view, * means it can be anything like Controller,Presenter or ViewModel etc. <br>
+MV* - M represent Model, V represents view, * means it can be anything like Controller,Presenter or ViewModel etc. 
 Angular uses Controller.
 
 Angular is an open source library developed by google.<br>
-Angular is comprehensive. It has lot of features like two way binding,routers etc.Angular developed by keeping testing in mind.<br>
-It supports both unit and end to end integration tests. Angular team also created a testing framework called karma. <br>
+Angular is comprehensive. It has lot of features like two way binding,routers etc.Angular developed by keeping testing in mind.
+It supports both unit and end to end integration tests. Angular team also created a testing framework called karma. 
 This became very popular and it is used for testing the applications that are not even using Angular.
 
 Angular extends HTML by providing custom elements like Directives which are used to interact with DOM. For ex,
 	<input id="username" type="text" focus>
-focus is a custom attribute that tells angular elements to focus when the page loads, but there is a similar attribute <br>
+focus is a custom attribute that tells angular elements to focus when the page loads, but there is a similar attribute 
 called autofocus in HTML5, the problem is that will work only with HTML browsers. With angular it works with much wider browsers.
 
 	<multiStateButton id="button1">
@@ -149,7 +149,8 @@ Lets say we have button which increases upVoteCount like this.
     </div>
 </li>
 
-Note: Angular needs no id's here, because it takes the session from the section of page and pass it to the controller. It helps in reducing the usage of id's and run into issues.
+Note: Angular needs no id's here, because it takes the session from the section of page and pass it to the controller. 
+It helps in reducing the usage of id's and run into issues.
  
 These two methods should be present on controller. Here is the controller code.
 
@@ -175,7 +176,8 @@ Ans: ng-src . This directive also allows delay rendering an image until angular 
 
 Built-in Directives
 -------------------
-According to angular directives are a way to teach HTML new trics. Essentially directives give HTML new functionality. Angular parses HTML and looks for directives and takes action based on what it finds. There are four ways to define directives.
+According to angular directives are a way to teach HTML new trics. Essentially directives give HTML new functionality. 
+Angular parses HTML and looks for directives and takes action based on what it finds. There are four ways to define directives.
 1)<ng-form/> // directive is tag itself.
 2)<div ng-form/> // directive is an attribute of a tag here.
 3)<div class="ng-form" /> // directive can be written as a class.
@@ -233,7 +235,9 @@ Angular encourages to manipulates DOM using directives like ngHide/ngShow and ne
 
 ngCloak
 -------
-This directive will allow hide portions of your HTML or all of your page until angular has a chance to run and go through and parse the HTML and replace the directives or the bindings with the actual values that is supposed to display. For ex you can this to body tag like this,
+This directive will allow hide portions of your HTML or all of your page until angular has a chance to run and go through 
+and parse the HTML and replace the directives or the bindings with the actual values that is supposed to display. 
+For ex you can this to body tag like this,
 	<body ng-cloak>
 You need to modify your css like this:
 [ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{
@@ -251,7 +255,8 @@ Add this myStyle variable in the controller like this.
 
 ngClass/ngClassEven/ngClassodd
 ------------------------------
-ngClassEven/ngClassOdd are same as ngClass but when you use ng-repeat those class properties are applied on even and odd rows accordingly. For ex,
+ngClassEven/ngClassOdd are same as ngClass but when you use ng-repeat those class properties are applied on even and odd 
+rows accordingly. For ex,
 	<div ng-class="myClass" ng-bind-html="snippet">Hi</div>
 
 Controller changes like this,	
@@ -305,7 +310,9 @@ Note: Older versions of IE has polyfill JSON.stringify() and custom ng directive
 
 Expressions
 -----------
-Expressions are javascript like code snippets can be put inside of HTML page. They are generally placed inside of bindings and typically in double curly braces like {{ expression }}. There can be variable names also like {{ event.name }} or mathematical expressions like {{ amount*100 }}. To print second element of an array a=[1,2,3] we can use {{ a[1] }}.
+Expressions are javascript like code snippets can be put inside of HTML page. They are generally placed inside of bindings 
+and typically in double curly braces like {{ expression }}. There can be variable names also like {{ event.name }} or 
+mathematical expressions like {{ amount*100 }}. To print second element of an array a=[1,2,3] we can use {{ a[1] }}.
 
 Note: Expressions won't support all javascript syntax. For ex, {{ Math.min(2,3)}} won't work. 
 
@@ -316,7 +323,8 @@ Filters are a way to tell angular to modify something for output. Filters typica
 2)Sorting dataset
 3)Filtering dataset
 	
-Note: Filters are dynamic. i.e. If you change the filter, the records that are outputted are automatically updated and the HTML is automatically adjusted.
+Note: Filters are dynamic. i.e. If you change the filter, the records that are outputted are automatically updated and the HTM
+L is automatically adjusted.
 
 Using Filter
 ------------
@@ -380,7 +388,8 @@ Suppose we want to filter the sessions using difficulty level. First create anot
 Lets add the query filter with ng-repeat like this.
 	<li ng-repeat="session in event.sessions | orderBy:sortorder | limitTo:2 | filter:query">
 
-Note: If user selects Advanced, then angular searches for the whole session object for the word Advanced, it won't check for the specific field name. If you want angular to select from a particular field(In this example field name is level) value to match, then
+Note: If user selects Advanced, then angular searches for the whole session object for the word Advanced, it won't check for 
+the specific field name. If you want angular to select from a particular field(In this example field name is level) value to match, then
 	<select ng-model="query.level" class="input-medium">
 		<option selected value="">All</option>
 		<option selected value="Introductory">Introductory</option>
@@ -392,7 +401,8 @@ Custom Filters
 --------------
 Writing custom filters is easy. First write a method named filter on module like this.
 	module.filter();
-This method will take two arguments one is name of the filter and another argument is a function which returns another function. For ex,
+This method will take two arguments one is name of the filter and another argument is a function which returns another function. 
+For ex,
 	modulename.filter('myFilter',function(){
 		return function(input /*,filter parameters*/){
 		//modify input
@@ -423,7 +433,9 @@ Lets make HTML changes like this.
 
 Two way binding
 ---------------
-Angular allows one more way for user to interact.i.e. Two way Binding. Two way Binding uses typicall form controls and keeps your model uptodate automatically. This is very convenient. you don't need to use any form controls to read the data from model or to update the data into model. This capability revolves around ngModel directive.
+Angular allows one more way for user to interact.i.e. Two way Binding. Two way Binding uses typicall form controls and keeps 
+your model uptodate automatically. This is very convenient. you don't need to use any form controls to read the data from model 
+or to update the data into model. This capability revolves around ngModel directive.
 *****
 ngModel directive works with three different HTML elements. They are input,select and textarea.
 Ex:
