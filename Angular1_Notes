@@ -5,21 +5,25 @@ Opinionated means the software is limiting and encourages the designer into doin
 Why opinionated software?
 Ans: The best software has vision and it takes sides. you can find the complete discussion on 37signals.com
 
-MV* - M represent Model, V represents view, * means it can be anything like Controller,Presenter or ViewModel etc. Angular uses Controller.
+MV* - M represent Model, V represents view, * means it can be anything like Controller,Presenter or ViewModel etc. <br>
+Angular uses Controller.
 
-Angular is an open source library developed by google.
-Angular is comprehensive. It has lot of features like two way binding,routers etc.
-Angular developed by keeping testing in mind. It supports both unit and end to end integration tests. Angular team also created a testing framework called karma. This became very popular and it is used for testing the applications that are not even using Angular.
+Angular is an open source library developed by google.<br>
+Angular is comprehensive. It has lot of features like two way binding,routers etc.Angular developed by keeping testing in mind.<br>
+It supports both unit and end to end integration tests. Angular team also created a testing framework called karma. <br>
+This became very popular and it is used for testing the applications that are not even using Angular.
 
 Angular extends HTML by providing custom elements like Directives which are used to interact with DOM. For ex,
 	<input id="username" type="text" focus>
-focus is a custom attribute that tells angular elements to focus when the page loads, but there is a similar attribute called autofocus in HTML5, the problem is that will work only with HTML browsers. With angular it works with much wider browsers.
+focus is a custom attribute that tells angular elements to focus when the page loads, but there is a similar attribute <br>
+called autofocus in HTML5, the problem is that will work only with HTML browsers. With angular it works with much wider browsers.
 
 	<multiStateButton id="button1">
 This one may be a toggle button, it works the way I want it in my application.
 
 	<userTile id="userTile1" user="currentUser">
-This is perhaps a display widget customized to a specific application that displays users in specific manner. All it needs is to pass a user object using the user property created in custom tag.
+This is perhaps a display widget customized to a specific application that displays users in specific manner. 
+All it needs is to pass a user object using the user property created in custom tag.
 
 *****
 Note:
@@ -32,11 +36,14 @@ Angular architecture
 --------------------
 Two way binding
 ---------------
-Angular supports two way binding. It means when user updates form fields it is instantly updated to angular model. i.e. In most of the cases you need to watch for specific events and respond to them and then manually update your HTML.
+Angular supports two way binding. It means when user updates form fields it is instantly updated to angular model. i.e. 
+In most of the cases you need to watch for specific events and respond to them and then manually update your HTML.
 
 Dirty Checking
 --------------
-You don't put your data in special structures and call getter and setter methods to read and write to your data. you can simply put your data into plain old javascript objects and angular will respond whenever data changes and automatically updates view.
+You don't put your data in special structures and call getter and setter methods to read and write to your data. 
+you can simply put your data into plain old javascript objects and angular will respond whenever data changes and
+automatically updates view.
 
 Dependency Injection
 --------------------
@@ -54,7 +61,8 @@ This is how users talk to application. Controllers talk to views using both one 
 
 Services
 --------
-These components contain real logic and state of your application. It contains complex business logic. Also, services are place where you want to communicate with the server.
+These components contain real logic and state of your application. It contains complex business logic. Also, services are
+place where you want to communicate with the server.
 
 Example
 -------
@@ -75,15 +83,20 @@ Example
 </body>
 </html>
 
-Note: angular.module() has two parameters. First one is name of the module and second parameter is the list of modules it depends on. In the above example it is empty array because it is not depending on any modules.
+Note: angular.module() has two parameters. First one is name of the module and second parameter is the list of modules it depends on. 
+In the above example it is empty array because it is not depending on any modules.
 
 Angular Controllers and Scope
 -----------------------------
-Controllers primary responsibility is to create scope object. The scope object communicates with the view. view can bind properties and functions on the scope. It means events on the view can call methods on a scope.
+Controllers primary responsibility is to create scope object. The scope object communicates with the view. 
+view can bind properties and functions on the scope. It means events on the view can call methods on a scope.
 
-Data passes from controller to scope and from scope back and forth to the view. Scope is used to expose the model to the view, but scope is not the model. If you want to modify the model, use methods on scope perhaps in response to the events on the view. Also, we can use two way bindings to modify the model.
+Data passes from controller to scope and from scope back and forth to the view. Scope is used to expose the model to the view, 
+but scope is not the model. If you want to modify the model, use methods on scope perhaps in response to the events on the view. 
+Also, we can use two way bindings to modify the model.
 
-Here is the sample Controller. The first argument is the name of the controller. The second argument is a function which takes a scope object and call functions on the scope object.
+Here is the sample Controller. The first argument is the name of the controller. The second argument is a function which takes 
+a scope object and call functions on the scope object.
 
 eventsApp.controller('EventController',function ($scope) {
     //In real application you retrieve this information from server
