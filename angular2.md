@@ -152,13 +152,14 @@ Note: In the above example we only have one property. No methods are defined.
 
 Creating metadata
 -----------------
-@Component({
-	selector: 'pm-root',
-	template: `
-		<div><h1>{{pageTitle}}</h1>
-		<div>My First Component</div>
-	`
-})
+
+	@Component({
+		selector: 'pm-root',
+		template: `
+			<div><h1>{{pageTitle}}</h1>
+			<div>My First Component</div>
+		`
+	})
 
 Note: AppComponent class becomes angular component when we give it component metadata. Angular needs this metadata to understand how to instantiate the component, construct the view and interact with the component. We define component with angular component function. In typescript we attach that function to the class as a decorator.
 
@@ -192,9 +193,10 @@ Our Component contains the selector. It is the name of the component that we use
 
 index.html
 ----------
-<body>
-	<pm-root></pm-root>
-</body>
+
+	<body>
+		<pm-root></pm-root>
+	</body>
 
 How does angular knows about this custom html element <pm-root>?.
 Ans: Angular module. As we know angular module helps in organize our application into cohesive blocks of functionality and provides boundaries with in application and also provide template resolution environment. That means, when an angular compiler sees a directive and a template it looks for the angular module for definition.
@@ -203,22 +205,22 @@ Note: We generally define AppComponent in an angular module, so the compiler can
 
 app.module.ts
 -------------
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+	import { BrowserModule } from '@angular/platform-browser';
+	import { NgModule } from '@angular/core';
 
-import { AppComponent } from './app.component';
+	import { AppComponent } from './app.component';
 
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
+	@NgModule({
+	  declarations: [
+	    AppComponent
+	  ],
+	  imports: [
+	    BrowserModule
+	  ],
+	  providers: [],
+	  bootstrap: [AppComponent]
+	})
+	export class AppModule { }
 
 Note: Our AppModule is identified as angular module using @NgModule() decorator. For the NgModule decorator, the properties are arrays. 
 1)In the declarations we have defined which components are part of this module.i.e. AppComponent. <br>
@@ -239,15 +241,16 @@ Template can be inline or linked. Consider the following examples:
 
 Single line inline Template
 ----------------------------
-template:"<h1>{{pageTitle}}</h1>"
+	template:"<h1>{{pageTitle}}</h1>"
 
 Multiline inline Template
 -------------------------
-This uses ES 2015 standard by enclosing HTML inside backtick(`) symbols to define the template.
-template: `
-		<div><h1>{{pageTitle}}</h1>
-		<div>My First Component</div>
-	`
+This uses ES 2015 standard by enclosing HTML inside backtick symbols to define the template like below.
+
+		template: `
+			<div><h1>{{pageTitle}}</h1>
+			<div>My First Component</div>
+		`
 
 Note: The advantage of using inline template is that the template is defined with in the same component, keeping view and the code for the view within the same file. It is then easy to match up our data binding with class properties.
 
@@ -262,42 +265,42 @@ Note: The products is a feature in this demo. Let's create a folder named produc
 
 product-list.component.html
 ---------------------------
-<div class="panel panel-primary">
-  <div class="panel-heading">
-    Product List
-  </div>
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-md-2">Filter By:</div>
-      <div class="cold-md-4">
-        <input type="text"/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">Filter By:</div>
-    </div>
-  </div>
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>
-            <button class="btn btn-primary">
-              Show Image
-            </button>
-          </th>
-          <th>Product</th>
-          <th>Code</th>
-          <th>Available</th>
-          <th>Price</th>
-          <th>5 Star Rating</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-      </tbody>
-    </table>
-  </div>
-</div>
+	<div class="panel panel-primary">
+	  <div class="panel-heading">
+	    Product List
+	  </div>
+	  <div class="panel-body">
+	    <div class="row">
+	      <div class="col-md-2">Filter By:</div>
+	      <div class="cold-md-4">
+		<input type="text"/>
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div class="col-md-6">Filter By:</div>
+	    </div>
+	  </div>
+	  <div class="table-responsive">
+	    <table class="table">
+	      <thead>
+		<tr>
+		  <th>
+		    <button class="btn btn-primary">
+		      Show Image
+		    </button>
+		  </th>
+		  <th>Product</th>
+		  <th>Code</th>
+		  <th>Available</th>
+		  <th>Price</th>
+		  <th>5 Star Rating</th>
+		</tr>
+	      </thead>
+	      <tbody>
+
+	      </tbody>
+	    </table>
+	  </div>
+	</div>
 
 
