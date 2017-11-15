@@ -263,6 +263,8 @@ templateUrl:'./product-list.component.html'
 
 Note: The products is a feature in this demo. Let's create a folder named products in side app directory and then create product-list.component.html file inside products folder.
 
+Consider the following example, which is a tabular display of the products using twitter bootstrap table classes. Table body left empty because we don't want to hard code values.
+
 product-list.component.html
 ---------------------------
 	<div class="panel panel-primary">
@@ -303,4 +305,361 @@ product-list.component.html
 	  </div>
 	</div>
 
+Building the component
+----------------------
+	
+	import {Component} from "@angular/core";
+	@Component({
+	  'selector': 'pm-products',
+	  'templateUrl':'./product-list.component.html'
+	})
+	export class ProductListComponent{
+	}
 
+We have built the component, but how to use this?
+Using this component as a directive. That means we can insert this component's template into any other component's template by using the selector as an html tag.
+
+Here are the steps to use a component as a directive.
+1)Let's include <pm-products> into the app components template. i.e. into app.component.ts like below.
+
+	@Component({
+	  'selector': 'pm-root',
+	  'template':`
+			<div><h1>{{pageTitle}}</h1>
+			  <pm-products></pm-products>
+			</div>
+		  `
+	})
+
+Note: When the above template is displayed, angular looks for the component that has the selector with this name. i.e. <pm-products>. 
+
+We may have hundreds of components in the application, how does angular knows where to look for the selector?
+Ans: The application looks for the angular module that owns this component. So, we need to defined this component in applications AngularModule.
+
+As we know every angular application must have atleast one angular module, the root application module. commonly called AppModule. Currently our AppModule declares only one component i.e. our AppComponent. A component must belong to only one module. Also, this module bootstraps the application with this component. i.e. This is the first component that is loaded for our application. Our AppModule also imports the System BrowserModule, to load the features needed to run this application within a browser. 
+
+So, an AngularModule defines the boundaries within which our component resolves it's directives and dependencies. so, when a component contains a directive, angular looks to the component's module to determine which directives are visible to that component.
+
+2)There are two ways to import a component. 
+i)If it is part of an external module, then we need to add to the imports array in AppModule. 
+ii)If a component is part of the same module, then we need to add this to declarations array. Consider the following code.
+	
+	import {ProductListComponent} from './products/product-list.component';
+
+	@NgModule({
+	  declarations: [
+		AppComponent,ProductListComponent
+	  ],
+	  imports: [
+		BrowserModule
+	  ],
+	  providers: [],
+	  bootstrap: [AppComponent]
+	})
+	export class AppModule { }
+
+Binding with Interpolation
+--------------------------
+Binding coordinates the communication between the component's class and its template and often involve passing data. We can provide values from the class to the template for display.
+Template raises events to pass user actions or user entered values to the class. 
+
+Note: The binding syntax is always defined in the template. Angular provides several types of bindings. We will first see Interpolation type.
+
+Consider the following example.
+
+	<h1>{{pageTitle}}</h1>
+
+The above double curly braces indicates interpolation. This pageTitle in the above example is bound to a class property. Consider the following class.
+
+	export class AppComponent{
+		pageTitle: string='Acme product management';
+		getTitle: string{...};
+	}
+
+Note: Interpolation is a one-way binding from the class property to the template. 
+
+Interpolation supports much more than simple properties. We can perform operations like concatenation, simple calculation or we can even call a class method. Consider the following examples.
+
+1) {{'Title' + pageTitle}} 
+2) {{2*10+1}}
+3) {{'Title' + getTitle()}}
+
+Note: we can even use interpolation with html element properties like below.
+	<h1 innerText={{pageTitle}}></h1>
+
+*****	
+Note: The template expression {{pageTitle}} used in html element and with html element attribute above gives same result. The template expression is evaluated by angular using component as the context. It then evaluates the expression to a string. So, anytime we want to display read-only data we define a property in the class and template expression in an html element or attribute like above.
+
+Directives
+----------
+A Directive is nothing but custom HTML element or attribute used to powerup or extend HTML.
+We can build our own Directives(Custom) or Angular Built-in directives. In the above example, we have created Custom directive <pm-products>. Let's see some of the angular built-in directives.
+
+Let's see the Angular's structural built-in directives like *ngIf,*ngFor. These are called structural because these will modify the structure of the template or view by adding,removing and manipulating child elements. Structural directives start with a '*'.
+
+*ngIf
+-----
+*ngIf is a structural directive that removes or recreates the portion of a DOM tree based on an expression. If the expression evaluates to a false value, the element and it's children are removed from the DOM. If evaluates to true, a copy of the element and it's children are inserted into the DOM. Consider the following example.
+
+	<div class='table-responsive'>
+		<table class='table' *ngIf='products && products.length'>
+			<thead>...
+			</thead>
+			<tbody>...
+			</tbody>
+		</table>
+	</div>
+
+Note: In the above example, if products variable has a value and the products list has length the table appears in the DOM. If not, table header,body and all of its children are removed from DOM.
+
+***
+As we know, angular module defines the boundary within which the component resolves its directives and dependencies. Where is this *ngIf comes from?
+Ans: *ngIf comes from BrowserModule. Luckily, we have already imported this in our applications module file.
+
+Consider the following example for displaying 'show Image' text if products are present.
+
+Let's create variable products in product-list.component.ts file.
+
+	export class ProductListComponent{
+	  pageTitle: string='Product List';
+	  products: any[]=[{
+		"productId": 1,
+		"productName": "Leaf Rake",
+		"productCode": "GDN-0011",
+		"releaseDate": "March 19, 2016",
+		"description": "Leaf rake with 48-inch wooden handle.",
+		"price": 19.95,
+		"starRating": 3.2,
+		"imageUrl": "http://openclipart.org/image/300px/svg_to_png/26215/Anonymous_Leaf_Rake.png"
+	  },
+		{
+		  "productId": 2,
+		  "productName": "Garden Cart",
+		  "productCode": "GDN-0023",
+		  "releaseDate": "March 18, 2016",
+		  "description": "15 gallon capacity rolling garden cart",
+		  "price": 32.99,
+		  "starRating": 4.2,
+		  "imageUrl": "http://openclipart.org/image/300px/svg_to_png/58471/garden_cart.png"
+		}]
+	}
+	
+Note: In typescript we define a variable type 'any' if we don't know it's type.	
+
+Let's revisit portion of our HTML in product-list.component.html
+
+	<div class="table-responsive">
+	    <table class="table" *ngIf="products && products.length">
+	      <thead>
+		<tr>
+		  <th>
+		    <button class="btn btn-primary">
+		      Show Image
+		    </button>
+		  </th>
+		  <th>Product</th>
+		  <th>Code</th>
+		  <th>Available</th>
+		  <th>Price</th>
+		  <th>5 Star Rating</th>
+		</tr>
+	      </thead>
+	      <tbody>
+
+	      </tbody>
+	    </table>
+	  </div>
+
+Note: you can test this code by making emptying products json array and then filling with some fields like above.
+
+*ngFor
+------
+*ngFor repeats the portion of the DOM tree once for each item in an iterable list. For example, we want to display each product in a row of a table.  Consider the below code snippet.
+
+	<tr *ngFor='let product of products'>
+		<td></td>
+		<td>{{product.productName}}</td>
+		<td>{{product.productCode}}</td>
+		<td>{{product.releaseDate}}</td>
+		<td>{{product.price}}</td>
+		<td>{{product.starRating}}</td>
+	</tr>
+
+why 'product of products' instead of 'product in products'?
+Ans: ES 2015 has bot 'for... of' and 'for... in' loops. Let's consider the following example to know the difference. 
+	
+	let names=['tulasi','ram','damarla'];
+	
+for... of loop iterates over the iterable objects like an array. So, the below code produces
+o/p: 'tulasi','ram','damarla'.
+	
+	for(let name of names){
+		console.log(name);
+	}
+	
+unlike for...of, for... in iterates over the properties of iterable object like index. so, the below code produces o/p:0,1,2.
+	
+	for(let name in names){
+		console.log(name);
+	} 
+
+Note: Since *ngFor is designed to iterate over the object, not their properties angular chooses to go with 'for... of'.
+
+Other ways of Databinding
+-------------------------
+
+Property Binding
+----------------
+Property binding allows us to set the property(or attribute) of an HTML element to the value of a template expression. Consider the following example.
+	
+	<img [src]='product.imageUrl']>
+
+Note: In the above example, product is not the component name, it is the property of a variable in the statement like 'let product of products'.
+
+Note: In the above example, [src] is called Binding target, mostly enclosed in angular brackets specifies the property of an HTML element, where as 'product.imageUrl' is called Binding source, always enclosed in quotes, specifies a template expression.
+*****
+Note:We can write the above property binding example using interpolation like below.
+	
+	<img src={{product.imageUrl}}>
+
+Which one is better Property Binding or Interpolation?
+Ans: The general guideline is to prefer Property Binding over interploation. But, sometimes when you use larger template expression like below, interploation is preferred.
+
+	<img src='http://openclipart.org/{{product.imageUrl}}'>
+
+Let's consider the above property binding example in the table data to display images.
+
+        <tr *ngFor='let product of products'>
+          <td>
+            <img [src]="product.imageUrl"
+                   [title]="product.productName"
+                   [style.width.px]="width"
+                   [style.margin.px]="margin">
+          </td>
+          <td>{{product.productName}}</td>
+          <td>{{product.productCode}}</td>
+          <td>{{product.releaseDate}}</td>
+          <td>{{product.price}}</td>
+          <td>{{product.starRating}}</td>
+        </tr>
+
+Note: width and margin are the properties of the component, not the product object.
+
+Event Binding
+-------------
+So far all the databinding is one way. But, there are other times where we need to respond to user events.
+
+An angular component listens to user actions using Event Binding. To findout the list of all user events go through the below link.
+
+	https://developer.mozilla.org/en-US/docs/Web/Events
+
+Consider the following example of event binding. 
+	
+	<button (click)='toggleImage()'>
+
+Note: In Event binding, Binding target is written in parenthesis like above. The Binding source is the template expression, usually a method in the component.
+
+Consider the following demo, to display or hide images based on user action on the button 'show image'. Consider the above click event and make the change for the component.
+
+Let's define the boolean property, which keep track of the current state.
+
+	export class ProductListComponent{
+	  pageTitle: string='Product List';
+	  width: number=50;
+	  margin: number=2;
+	  showImage: boolean=false;
+	  toggleImage(){
+		this.showImage = !this.showImage;
+	  }
+	}
+	
+Note: showImage variable is to keep track of current state of show image click status.It is set to a default value of false, so that the images are not displayed when page is loaded.
+
+Note: The body of the method toggleImage is simply to toggle the state of the showImage property.
+
+Let's modify the img tag to display images based on the state of showImage property of the component.
+
+	<img *ngIf="showImage"
+		   [src]="product.imageUrl"
+		   [title]="product.productName"
+		   [style.width.px]="width"
+		   [style.margin.px]="margin">
+
+Note: The button text always displayed as 'Show Image'. Let's change this 'Hide Image' when the image is currently displaying, by adding a ternary operation using interpolation like below.
+
+    <button (click)="toggleImage()"  class="btn btn-primary">
+        {{showImage ? 'Hide Image' : 'Show Image'}}
+    </button>
+
+
+Two way Binding
+---------------
+When working with UI element such as HTML input we often want to display a component class property in the template and update that property when user makes a change. This requires two way binding. To do that in angular, we use ngModel directive. Consider the below template and component class snippets.
+
+	<input [(ngModel)]='listFilter'>
+
+	export class ListComponent{
+		listFilter: string='cart';
+	}
+
+Note:[(ngModel)] the angular brackets indicates property binding and parenthesis indicate the event binding. It is assigned to the template expression. 
+***
+Note: The directive ngModel is part of 'FormsModule', which we need to import like our BrowserModule.
+
+Consider the below demo example for displaying FilterBy text.
+
+1)Template change is required as below.
+
+    <div class="row">
+      <div class="col-md-2">Filter By:</div>
+      <div class="cold-md-4">
+        <input type="text" [(ngModel)]="listFilter"/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">Filter By: {{listFilter}}</div>
+    </div>
+
+2)Add listFilter property to the component class as mentioned above.
+3)Add FormsModule to our application's module file.
+
+	import {FormsModule} from "@angular/forms";
+	@NgModule({
+	  declarations: [
+		AppComponent,ProductListComponent
+	  ],
+	  imports: [
+		BrowserModule,FormsModule
+	  ],
+	  providers: [],
+	  bootstrap: [AppComponent]
+	})
+	export class AppModule { }
+
+Data Transformation with Pipes
+------------------------------
+With Angular's data binding displaying data is easy. But, sometimes data is not in a format appropriate for display. This where Pipes are useful. Pipes transform bound properties before they are displayed. So, we can alter the property values to make them more user friendly or more locale appropriate. Angular provides some built-in pipes for formatting values, such as data,number,decimal,percent,currency,uppercase,lowercase etc. It also has some piepes tow work with objects to be displayed as json string, which is useful for debugging. It also has a slice pipe which selects the specific subset of elements from a list. we can also build our custom pipes.
+
+Consider the below examples.
+1)Displaying productCode in lowercase.
+	
+	{{product.productCode | lowercase}}
+	
+2)pipes can also be specified in HTML element properties. For ex,
+
+	<img *ngIf="showImage"
+		   [src]="product.imageUrl"
+		   [title]="product.productName | uppercase"
+		   [style.width.px]="width"
+		   [style.margin.px]="margin">
+
+3)pipes can be chained as well. For ex,
+	
+	{{product.price | currency | lowercase}}
+
+Note: By default currency abbreviation is displayed in uppercase.
+4)Some pipes support parameters. parameters are defined by specifying a colon and the parameter value. For ex,
+	{{product.price | currency:'USD':true:'1.2-2'}}
+	
+Note: currency pipe has three parameters. The first parameter is desired currency code, second 
+parameter is a boolean value indicating whether to display currency symbol and the third parameter is the digit info. Digit info indicates minimum no of integer digits(1), minimum no of fractional digits(2) and the maximum no of fractional digits(2).
