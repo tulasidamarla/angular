@@ -140,7 +140,7 @@ As mentioned in the beginning, component contains template,class and metadata.
 
 Creating component
 ------------------
-Consider the following example, where the name of the component is app.component.ts. 
+Consider the following example. Create a file with name app.component.ts. 
 
 Creating the component class
 ----------------------------
