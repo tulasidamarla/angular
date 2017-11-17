@@ -385,6 +385,7 @@ Interpolation supports much more than simple properties. We can perform operatio
 3) {{'Title' + getTitle()}}
 
 Note: we can even use interpolation with html element properties like below.
+	
 	<h1 innerText={{pageTitle}}></h1>
 
 *****	
