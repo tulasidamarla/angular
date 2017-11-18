@@ -599,7 +599,7 @@ When working with UI element such as HTML input we often want to display a compo
 
 	<input [(ngModel)]='listFilter'>
 
-	export class ListComponent{
+	export class ProductListComponent{
 		listFilter: string='cart';
 	}
 
@@ -664,3 +664,110 @@ Note: By default currency abbreviation is displayed in uppercase.
 	
 Note: currency pipe has three parameters. The first parameter is desired currency code, second 
 parameter is a boolean value indicating whether to display currency symbol and the third parameter is the digit info. Digit info indicates minimum no of integer digits(1), minimum no of fractional digits(2) and the maximum no of fractional digits(2).
+
+Defining Interfaces
+-------------------
+We know typescript is strongly typed, so it helps in syntax checking and better tooling. But, sometimes we can't have a specific type. For ex, products in the ProductListComponent component we have defined as any[]. This will negate the benifits of strong typing. To specify custom types we define Interfaces. 
+
+An interface identifies a related set of properties and methods. A class commits to supporting the specification by implementing the interface.
+ES 5 and ES 2015 still don't support Interfaces. When the code is traspiled you can't see interfaces. These are just development time only for strong typing. Let's create the IProduct interface. Note we don't have any methods for our requirement.
+
+	export interface IProduct{
+		productId: number;
+		productName: string;
+		productCode: string;
+		releaseDate: string;
+		description: string;
+		price: number;
+		starRating: number;
+		imageUrl: string;
+	}
+
+Note: Interfaces are prefixed with 'I' by convention. Many developers ignore this, but it is easy to distinguish by looking at the name.
+
+Defining Component Styles
+-------------------------
+There are multiple ways to define styles.<br>
+1)we can inline the styles directly into HTML.<br>
+2)Define an external stylesheet and link it in index.html.<br>
+3)Encapsulating styles in component decorator itself. 
+
+Note: With inline css and external stylesheet approaches, it is harder to see, reuse and maintain.
+
+Component decorator provides two properties to define styles. They are <br>
+1)styles
+2)styleUrls
+
+Note: styles and styleUrls both take array of strings. styleUrls takes external stylesheet links. 
+
+Let's create a sample css file product list header in a file 'product-list.component.css'. Consider the below snippet.
+
+	thead{
+		color: #337AB7
+	}
+
+Add the above stylesheet link in product-list.component.ts file. Consider the below snippet.
+
+	@Component({
+	  selector: 'pm-products',
+	  templateUrl: './product-list.component.html',
+	  styleUrls:['./product-list.component.css']
+	})
+
+Component Lifecycle Hooks
+-------------------------
+A component has lifecycle managed by angular. Here are the steps.<br>
+1)Angular creates a component<br>
+2)Render the component<br>
+3)Create the children components and render them<br>
+4)process changes when it's databound properties change<br>
+5)Destroy it before removing it from DOM
+
+Angular provides a set of lifecycle hooks we can use to tap into these lifecycle and perform operations as needed. Here is the list.
+
+1)ngOnChanges()	
+Respond when Angular (re)sets data-bound input properties. The method receives a SimpleChanges object of current and previous property values.
+Called before ngOnInit() and whenever one or more data-bound input properties change.
+2)ngOnInit()	
+Initialize the directive/component after Angular first displays the data-bound properties and sets the directive/component's input properties.
+Called once, after the first ngOnChanges().
+3)ngDoCheck()	
+Detect and act upon changes that Angular can't or won't detect on its own.
+Called during every change detection run, immediately after ngOnChanges() and ngOnInit().
+4)ngAfterContentInit()	
+Respond after Angular projects external content into the component's view.
+Called once after the first ngDoCheck().
+A component-only hook.
+5)ngAfterContentChecked()	
+Respond after Angular checks the content projected into the component.
+Called after the ngAfterContentInit() and every subsequent ngDoCheck().
+A component-only hook.
+6)ngAfterViewInit()	
+Respond after Angular initializes the component's views and child views.
+Called once after the first ngAfterContentChecked().
+A component-only hook.
+7)ngAfterViewChecked()	
+Respond after Angular checks the component's views and child views.
+Called after the ngAfterViewInit and every subsequent ngAfterContentChecked().
+A component-only hook.
+8)ngOnDestroy()	
+Cleanup just before Angular destroys the directive/component. Unsubscribe Observables and detach event handlers to avoid memory leaks.
+Called just before Angular destroys the directive/component.
+
+OnInit Demo
+-----------
+OnInit performs any component initialization after angular has initialized the data bound properties. This a good place to retrieve the data for the template from backend service. 
+
+Note: As we can see from the above list, first method in the lifecycle is OnChange, which is called first when input properties(discussed next) are bound. OnInit is the second in the list, which will be called after data bound properties are initialized.
+
+Since, angular itself is written in typescript, it provided with a set of interfaces our component classes has to implement. Consider the below snippet.
+
+	
+	import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+	export class ProductListComponent implements OnInit{
+		    ngOnInit(): void {
+				console.log('on init');
+			}
+	}
+
+note: As we know ES 5 and ES 2015 supports no interfaces. So, these interfaces are traspiled out of the resulting javascript. We can actually ignore the OnInit in the component declaration and can simply implement the method ngOnInit(). But, it's a good practice to declarte it in the component declaration.
