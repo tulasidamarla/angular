@@ -1,4 +1,4 @@
-Angular is a javascript framework for building client-side applications using html,css and language like javascript.
+Angular is a javascript framework for building client-side applications using html,css and languages like javascript.
 
 Why Angular
 -----------
@@ -57,8 +57,7 @@ Typescript
 Typescript is an open source language. As mentioned above, it is a superset of javascript and compiles(or transpiles) to plain javascript. It is strongly typed. so every variable,function and function parameter will have a data type. 
 
 How does typescript determines the type, when using javascript libraries that are not strongly typed?
-Ans: By using typescript type definition files(*.d.ts). These files contain the definition of each type in a library. These files are named as library_name.d.ts. Typescript implements ES 2015 
-class based object orientation. so developers from object oriented languages like c++,java feel it very familiar.
+Ans: By using typescript type definition files(*.d.ts). These files contain the definition of each type in a library. These files are named as library_name.d.ts. Typescript implements ES 2015 class based object orientation. so developers from object oriented languages like c++,java feel it very familiar.
 
 Environment setup
 -----------------
@@ -104,7 +103,7 @@ Modules
 Javascript always has the problem of namespaces. If we are not careful,we end up with variables and functions in global namespace. In addition to this, javascript did not provide features to help with code organization. Modules help in resolving these issues.
 
 1)Angularjs has modules to help us organize our code and resolve some namespacing issues. 
-2)Typescript also shas modules that help keeping the variables out of the global namespace.
+2)Typescript also has modules that help keeping the variables out of the global namespace.
 3)ES 2015 set a standard for defining modules. As per ES 2015 a module is a file. So, when you code in ES 2015, we don't need to define a module. i.e. create a file, write some code, then export or import something. that's it. A file becomes a module.
 
 Note: Angular levarages ES 2015 standars. so, when we create code files and then import or export something we create modules for our application.
@@ -254,7 +253,7 @@ This uses ES 2015 standard by enclosing HTML inside backtick symbols to define t
 
 Note: The advantage of using inline template is that the template is defined with in the same component, keeping view and the code for the view within the same file. It is then easy to match up our data binding with class properties.
 
-Note: There are disadvantages aswell with inline template. When defining view with in backticks most of the tools don't provide intelligence, automatic formatting and syntax checking. The alternative for this is Linked Template.
+Note: There are disadvantages also with inline template. When defining view with in backticks most of the tools don't provide intelligence, automatic formatting and syntax checking. The alternative for this is Linked Template.
 
 Linked Template
 ---------------
@@ -360,8 +359,7 @@ ii)If a component is part of the same module, then we need to add this to declar
 
 Binding with Interpolation
 --------------------------
-Binding coordinates the communication between the component's class and its template and often involve passing data. We can provide values from the class to the template for display.
-Template raises events to pass user actions or user entered values to the class. 
+Binding coordinates the communication between the component's class and its template and often involve passing data. We can provide values from the class to the template for display.Template raises events to pass user actions or user entered values to the class. 
 
 Note: The binding syntax is always defined in the template. Angular provides several types of bindings. We will first see Interpolation type.
 
@@ -771,3 +769,180 @@ Since, angular itself is written in typescript, it provided with a set of interf
 	}
 
 note: As we know ES 5 and ES 2015 supports no interfaces. So, these interfaces are traspiled out of the resulting javascript. We can actually ignore the OnInit in the component declaration and can simply implement the method ngOnInit(). But, it's a good practice to declarte it in the component declaration.
+
+Custom Pipes
+------------
+Let's build a custom pipe to replace '-' with a space in the productCode. Building a pipe needs the following changes.
+
+1)Create a pipe decorator like this.
+	@Pipe({name:'convertToSpaces'})
+
+2)create a class which should implement PipeTransform interface.
+	export class ConvertToSpacesPipe implements PipeTransform{
+	}
+	
+3)Implement the transform method of PipeTransform interface.
+	transform(input: string, key: string): string{
+	}
+
+4)import Pipe and PipeTransform from angular core libraries.
+	import {Pipe, PipeTransform} from '@angular/core';
+	
+5)Modify the view to use the above created pipe.
+	<td>{{product.productCode | convertToSpaces:'-'}}</td>
+
+Note: convertToSpaces should match the name defined in Pipe decorator. As seen with built-in pipes, any arguments to the pipe have to be sepearated with a colon.
+
+6)Add the pipe to the angular module in declarations array.
+
+Filtering a list
+----------------
+There is no built-in pipe that angular provides for flitering a list. Angular team strongly suggests moving filtering/sorting logic to the component class. Let's add a property in ProductListComponent class component which gives filtered products. Consider the below example.
+
+	export class ProductListComponent implements OnInit{
+		_listFilter: string;
+		filteredProducts: IProduct[];
+		    get listFilter(): string{
+				return this._listFilter;
+			}
+
+			set listFilter(value: string){
+			  this._listFilter= value;
+			}
+	}	
+
+Note: hardcoded listFilter property is removed and modified _listFilter so that filter criteria can be modified by the user.
+
+Note: Everytime user modifies the filter criteria text, set listFilter() method is called. So, lets write the filtering logic in the method. Consider the below snippet.
+
+		set listFilter(value: string){
+		  this._listFilter= value;
+		  this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
+		}
+			
+		performFilter(filterBy: string): IProduct[]{
+		  filterBy=filterBy.toLocaleLowerCase();
+		  return this.products.filter(
+			(product: IProduct) => product.productName.toLocaleLowerCase().indexOf(filterBy) !== -1) ;
+		}
+
+Note: Change the view to display filteredProducts instead of products. Consider the below snippet.
+
+        <tr *ngFor='let product of filteredProducts'>
+
+Note: In typescript private fields start with '_'.
+
+Nested Components
+-----------------
+In angular components can be nested. As we know each component is fully encapsulated, we expose specific inputs and outputs for communication between a nested component and it's container allowing them to pass data back and forth. There are two ways to use a component and to display the components template.<br>
+1)We can use the component as a directive
+2)We can use the component as a routing target. It appears to the user that is moved a to new page.
+
+Note: Any component in angular can be nested, if they have a selector defined in the component decorator.
+
+Building a nested component
+---------------------------
+When building a nested component, it often needs to communicate to the parent(or container) component. consider the below flow. <br>
+1)The nested component receives the information from its container using input properties.<br>
+2)The nested component outputs the information back to its container by raising events.
+
+Example:
+In the example we are currently working, The star rating currently displays numbers. Let's display stars instead of numbers using nested component. Consider the below steps.<br>
+1)The container component has to send the rating number to the nested component as input. <br>
+2)If the user clicks on the stars, we want to raise an event to notify the container.
+
+Building a star component
+-------------------------
+1)Let's create the star component and its css file in a shared folder so that it can be reused across different components. Let's name the html file as star.component.html and write the below snippet.
+
+	<div class="crop" 
+		[style.width.px]="starWidth"
+		[title]="rating">
+		<div style="width: 86px">
+			<span class="glyphicon glyphicon-star"></span>
+			<span class="glyphicon glyphicon-star"></span>
+			<span class="glyphicon glyphicon-star"></span>
+			<span class="glyphicon glyphicon-star"></span>
+			<span class="glyphicon glyphicon-star"></span>
+		</div>
+	</div>
+	
+Note: To display 4.5 rating, we can use percentage logic with start width. i.e. 86px in this example. rating and starWidth properties have to be defined in the component.	
+
+2)Add the styles in a file, lets name it as star.component.css and add the below snippet.
+
+	.crop {
+		overflow: hidden;
+	}
+	div {
+		cursor: pointer;
+	}
+
+3)Let's create the component file as start.component.ts. It should implement OnChanges interface method ngOnChanges() to recalculate star rating everytime the container change the rating number. Consider the below component code.
+
+	export class StarComponent implements OnChanges{
+		rating: number = 4;
+		starWdith: number;
+		ngOnChanges(): void {
+			this.starWdith = this.rating*86/5;
+		}
+	}
+
+Nesting the star component
+--------------------------
+1)Use the nested component as a directive in the container component. Lets replace the starRating(<td>{{product.starRating}}</td>) in product-list.component.html with <pm-star></pm-star>.
+
+2)Declare the star component in the angular module.i.e. add it to the declarations array.
+
+Note: With the above changes, we can see all 5 stars in the UI. But, it should display only 4. This is because ngOnchanges will only be called when a change occurs to the input properties. Lets see in the next section how to pass data to a nested component using input properties.
+
+Passing Data using input properties
+-----------------------------------
+1)If a nested component wants to receive input from its container it must expose a property to the container. This property should be decorated with @Input() decorator. Consider the below snippet.
+
+	export class StarComponent{
+		@Input() rating: number = 4;
+	}
+
+2)The above property must be binded in product-list.component.html using property binding. i.e. <pm-star [rating]='product.starRating'></pm-star>.
+
+Note: This nested component property rating is the binding target here. This is the only time a property is used as binding target.
+
+Passing Data using output properties
+------------------------------------
+Lets take the use case of displaying the rating in the container template when user clicked on stars.
+
+1)If the nested component wants to send the information back to its container it can raise an event. The nested component exposes an event it can use to pass output to the container using the decorator @Output(). The property type of an output property must be an event. The data to be passed becomes the event payload. In angular an event is defined with EventEmitter object. Consider the below snippet.
+
+	export class StarComponent{
+		@Output() notify: EventEmitter<string> = new EventEmitter<string>();
+	}
+
+Note: In the above example, payload if of type string. we can pass any payload type like number, object etc. 
+
+2)When clicked on stars, the star component receives an event. Lets define event binding in the star.component.html file like below.
+	<div (click)='onClick()'>...stars..</div>
+
+3)Add the onClick() method in star component. Consider the below snippet.
+
+	export class StarComponent{
+		onClick(){
+			this.notify.emit('clicked');
+		}
+	}
+
+Note: In the onClick() we call the emit method on the notify event property to raise an event to the container. If we want to pass the data, then we pass that data to the emit method. In the above example, it just send a string message 'clicked'.
+
+4)container component template receives the payload of the event generated in the above step. In the container component template we use event binding to bind to the notify event. Consider the below snippet.
+
+	<pm-star [rating]='product.starRating' (notify)='onNotify($event)'></pm-star>
+
+Note: This is the only time a components property is used as event binding target.
+
+5)We need to define the action that needs to performed when an event is raised. As mention in the above step, lets define the method onNotify() in the container component. Consider the below snippet.
+	
+	export class ProductListComponent{
+		onNotify(message: string): void{}
+	}
+
+	
