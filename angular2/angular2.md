@@ -915,7 +915,7 @@ Lets take the use case of displaying the rating in the container template when u
 1)If the nested component wants to send the information back to its container it can raise an event. The nested component exposes an event it can use to pass output to the container using the decorator @Output(). The property type of an output property must be an event. The data to be passed becomes the event payload. In angular an event is defined with EventEmitter object. Consider the below snippet.
 
 	export class StarComponent{
-		@Output() notify: EventEmitter<string> = new EventEmitter<string>();
+		@Output() ratingClicked: EventEmitter<string> = new EventEmitter<string>();
 	}
 
 Note: In the above example, payload if of type string. we can pass any payload type like number, object etc. 
@@ -927,7 +927,7 @@ Note: In the above example, payload if of type string. we can pass any payload t
 
 	export class StarComponent{
 		onClick(){
-			this.notify.emit('clicked');
+			this.ratingClicked.emit('clicked');
 		}
 	}
 
@@ -935,14 +935,226 @@ Note: In the onClick() we call the emit method on the notify event property to r
 
 4)container component template receives the payload of the event generated in the above step. In the container component template we use event binding to bind to the notify event. Consider the below snippet.
 
-	<pm-star [rating]='product.starRating' (notify)='onNotify($event)'></pm-star>
+	<pm-star [rating]='product.starRating' (ratingClicked)='onRatingClicked($event)'></pm-star>
 
 Note: This is the only time a components property is used as event binding target.
 
 5)We need to define the action that needs to performed when an event is raised. As mention in the above step, lets define the method onNotify() in the container component. Consider the below snippet.
 	
 	export class ProductListComponent{
-		onNotify(message: string): void{}
+		onRatingClicked(message: string): void{
+			this.pageTitle = 'Product List: ' + message;
+		}
 	}
 
+Services and Dependency Injection
+---------------------------------
+Service is a class with a focused purpose. They are used for features that 
+1)independent from any particular component.
+2)provide shared data and logic across components.
+3)encapsulate external interactions like rest, database etc.
+
+By moving these responibilities from component to service, the code is easier to test, debug and reuse. 
+
+Working with Services
+---------------------
+
+Consider the below service class.
 	
+	export class MyService{}
+
+There are two ways that a component work with service. 	
+1)A component can create an instance of the service class and use it like below.
+	
+	let service = new MyService();
+
+Note: The above instance is local to the component. This instance cannot be shared across components. Also, it is difficult to mock the service for testing.
+	
+2)Register the service with angular. Angular then creates a single instance of the service, called singleton instance. Angular provides a built-in injector to do this. We register our service with angular injector, which maintains a container of created service instances. Injector maintains a singleton instance of each registered service. To access, service Component class has to define the service as a dependency like below.
+	export class MyComponent{
+		constructor(private _MyService){
+		}
+	}
+
+Note: Angular injects the MyService instance into the constructor as shown above. This process is called dependency injection.
+
+Building a Service
+------------------
+Let's take an example of reading data into a service class instead of hardcoding in productlist.component.ts.
+
+When building a service we often use @Injectable() decorator. This is really required if the service itself has an injected dependency. But it's a good practice to this dependency for consistency. For ex,
+
+	@Injectable()
+	export class ProductService{
+		getProducts(): IProduct[]{
+			//return the products json here
+		}
+	}
+
+Note: Let's move the above service class to a file say product.service.ts and then you can move the products json from product-list.component.ts to the above getProducts() method.	
+
+Registering the service
+-----------------------
+For registering the service we need to add the Service to providers list the angular module. Consider the below code.
+	
+	import { ProductService } from './products/product.service';
+	
+	@NgModule({
+	  declarations: [
+		AppComponent,
+		ProductListComponent,
+		ConvertToSpacesPipe,
+		StarComponent
+	  ],
+	  imports: [
+		BrowserModule,FormsModule
+	  ],
+	  providers: [ProductService],
+	  bootstrap: [AppComponent]
+	})
+	export class AppModule { }
+
+Injecting the service
+---------------------
+Injecting the service into ProductListComponent is done through constructor injection. Consider the below code snippet.
+
+	export class ProductListComponent implements OnInit{
+	  _productService: ProductService;
+
+	  constructor(productService: ProductService){
+		this._productService = productService;
+	  }
+	}
+	
+Let's modify the onInit() method to load the products from service during initialization. Consider the below snippet.
+
+    ngOnInit(): void {
+      this.products=this._productService.getProducts();
+      this.filteredProducts = this.products;
+    }	
+
+Retrieving data using http
+--------------------------
+As we know most applications retrieve data using http. UI apps interact with webservices over http to retrieve data. Let's take an example of replacing the hard coded products json data in the service class with a http call.
+
+Observables and Reactive extensions
+-----------------------------------
+Observables help us manage asynchronous data. Observables treat events as a collection. We can think of an observable as an array whose items arrive asynchronously over time. Observables are proposed feature for ES 2016. To use observables now in angular 2, angular uses reactive extensions(rxjs). Don't confuse this with react UI library. 
+
+Observables manage set of events with operators. Operators process each value as it is emitted asynchronously. Few examples of operators include map,filter,take,merge etc.
+
+A method in the code can subscribe to observable to receive asynchronous notification when data arrives. The method can then react as data is pushed to it. The method is notified when there is no data or when an error occurs.
+
+Observables vs Promises
+-----------------------
+1)A Promise returns a single future value, whereas an observable emits multiple values over time.
+2)A promise is not lazy (By the time we have a promise, it is on its way to being resolveed), whereas observable is lazy until they are subscribed to.
+3)A promise is not cancellable, it is resolved or rejected and only once, whereas an observable can be cancelled by unsubscribing.
+
+Note: A promise can also be used with angular, but unlike promise an observable supports operators like map, filter.
+
+Sending a http request
+----------------------
+We have hard coded products json into the service. Instead We can access data using angulars http request and response protocols from a web server. In our case we don't have a web server, so let's read from products.json file we have in our starter project in api folder using angular http.
+Consider the below code snippet.
+
+	import {HttpClient} from '@angular/common/http';
+	import {Observable} from 'rxjs/Observable';
+	
+	@Injectable()
+	export class ProductService{
+		private _productURL = '../api/products.json';
+		constructor(private _http: HttpClient){
+		}
+		
+		getProducts(): Observable<IProduct[]>{
+			this._http.get<IProduct[]>(this._productURL);
+		}
+	}
+
+Note: http get method and Observable both supports generics.
+	
+Registering the Http Service provider
+-------------------------------------
+Registering Http service provider needs to add it imports array. Consider the below snippet.
+
+	import { HttpClientModule } from '@angular/common/http';
+	
+	@NgModule({
+	  declarations: [
+		AppComponent,
+		ProductListComponent,
+		ConvertToSpacesPipe,
+		StarComponent
+	  ],
+	  imports: [
+		BrowserModule,FormsModule,HttpClientModule
+	  ],
+	  providers: [ProductService],
+	  bootstrap: [AppComponent]
+	})
+	export class AppModule { }
+
+Exception Handling
+------------------
+When communicating with backend server many things can go wrong like connection issues, data issues etc. Let's add some exception handling. Let's consider the below code snippet.
+
+	import { IProduct } from "./product";
+	import { Injectable } from "@angular/core";
+	import { Observable } from "rxjs/Observable";
+	import { HttpClient,HttpErrorResponse } from "@angular/common/http";
+
+	import 'rxjs/add/observable/throw';
+	import 'rxjs/add/operator/do';
+	import 'rxjs/add/operator/catch';
+
+	@Injectable()
+	export class ProductService{
+
+		private _productURL = '../api/products/products.json'
+		constructor(private _http: HttpClient){
+
+		}
+		getProducts(): Observable<IProduct[]>{
+			return this._http.get<IProduct[]>(this._productURL)
+					.do(data => console.log(JSON.stringify(data)))
+					.catch(this.handleError);    
+		}
+
+		private handleError(err: HttpErrorResponse){
+			return Observable.throw(err.message);
+		}
+	}
+
+Note: throw,do,catch are loaded directly without importing them locally.
+
+Subscribing to an Observable
+----------------------------
+If you are familiar with Promises, result of a calculation say x, is received by calling then method. For ex,
+
+		x.then(valueFn,errorFn);
+		
+Note: valueFn is called when function completes successfully and errorFn incase of failure.
+
+Similary, Observable has the below methods.
+		
+		let sub=x.subscribe(valueFn, errorFn);
+		let sub=x.subscribe(valueFn,errorFn,completeFn);
+		
+Note: unlike promise, valueFn is called each time a value is emitted. In somecases, we want to know when the values are completed. In this case, use the second method with the parameter of completeFn.
+
+we can use the variable 'sub' to call unsubscribe and cancel if needed.	
+
+Consider the below ngOnInit() change in product-list.component.ts for subscribing to the Observable returning from product service.
+
+    ngOnInit(): void {
+      this._productService.getProducts()
+        .subscribe(products => {
+						this.products = products;
+						this.filteredProducts=products;
+						},
+                    error => this.errorMessage = <any>error);
+      console.log('on init');
+    }
+
+Note: By the time products are fetched asynchronously, filteredProducts variable is loaded. That's why we moved filteredProducts also inside subscribe.
