@@ -1158,3 +1158,329 @@ Consider the below ngOnInit() change in product-list.component.ts for subscribin
     }
 
 Note: By the time products are fetched asynchronously, filteredProducts variable is loaded. That's why we moved filteredProducts also inside subscribe.
+
+Navigation and Routing
+----------------------
+Applications often provide multiple sets of data in multiple layouts or views. Routing provides a way to navigate between those views of the application.
+
+Let's build a product detail component and navigate to it from product list component. Let's use angular cli to generate component,template,test and its styling files using the command from the project root directory.
+	
+	ng g c products/product-detail --flat
+
+Here is the description of the arguments of ng command.
+g -> generate
+c -> component
+product/product-detail -> name and location of the component
+--flat --> By default angular generates component files in a folder. This argument tells angular to create them without a folder.
+
+Note: The above command generates the following files.
+1)product-detail.component.ts
+2)product-detail.component.html
+3)product-detail.component.css
+4)product-detail.component.spec.ts
+
+product-detail.component.html
+-----------------------------
+Let's open the template product-detail.component.html and add the below text.
+
+	<div class='panel panel-primary'>
+	  <div class='panel-heading'>
+		{{pageTitle: + ':' + product.productName}}
+	  </div>
+	</div>
+
+*****	
+Note: If we use http to load the data from web server, the above view tries to display productName even before the data is loaded. we would get runtime error saying the property product is undefined. There are several common ways to mitigate this.
+
+1)We could use safe navigation operator which will stop navigating through the properties. For example, if product is undefined then it will not attempt to access any properties like productName , productCode etc. Consider the below snippet.
+
+	product?.productName
+
+Note: safe navigation operator is not the best option all the times. It won't work with two way binding. The below code won't work.
+	
+	[(ngModel)]=product?.productName
+
+Note: Also, it is very tedious if we have display too many properties in the view like this.
+
+2)Using ngIf is considered one of the best approaches as we don't need to use safe navigation operator for each property.
+
+	<div class='panel panel-primary' ngIf='product'>
+	  <div class='panel-heading'>
+		{{pageTitle: + ':' + product.productName}}
+	  </div>
+	</div>
+
+product-detail.component.ts
+---------------------------
+Let's see the product-detail component code with the properties pageTitle and product.
+
+	import { Component, OnInit } from '@angular/core';
+
+	@Component({
+	  selector: 'pm-product-detail',
+	  templateUrl: './product-detail.component.html',
+	  styleUrls: ['./product-detail.component.css']
+	})
+	export class ProductDetailComponent implements OnInit {
+	   pageTitle: string='Product Detail';
+	   product: IProduct;
+	   constructor() { }
+	   ngOnInit() { }
+	}
+
+Note: The Component decorator has a selector auto generated. This is not required here, because it is not nested inside another component. This components view is loaded as part of the navigation. Let's remove it.
+
+Routing fundamentals
+--------------------
+An angular application is a single page application. All of our views are displayed with in one page, normally defined in index.html. So, each of the views take turn to appear on that one page. To manage which view to display when, we use routing for this purpose.
+
+How Routing works
+-----------------
+1)Configure a route for each component that wants to display its view on the page.
+2)As part of app design, we provide options/actions like menu, toolbar, buttons, image or data links that allow the user to select the view to display.
+3)Tie a route to each of the option/action
+4)when user selects an option or perform action, the associated route will be activated and the components view will be displayed.
+
+Routing example with a menu option
+----------------------------------
+Let us assume there is a menu option named 'Product List' which will navigate to product list component. The menu option can be defined using anchor tag like below.
+
+	<a routerLink="/products">Product List</a>
+	
+Note: routerLink is a built-in directive of angular.
+
+When user clicks on the above menu option, it navigates to localhost:3000/products, we can see the change in address bar.
+
+Note: Angular uses HTML 5 style urls, which won't require Hash(#) style urls for local navigation. Angular also supports Hash style urls.
+
+Configuring Routes
+------------------
+Routing is component based. We identify set of components that we want to provide as routing targets and define a route for each one.
+
+1)An angular application will have one router that is managed by angular's router service. As we know every angular service has to registerd with angular root module. Consider the below code snippet.
+
+	import { RouterModule } from '@angular/router';
+
+	@NgModule({
+	  declarations: [...],
+	  imports: [
+		BrowserModule,FormsModule,HttpClientModule,RouterModule
+	  ],
+	  providers: [ProductService],
+	  bootstrap: [AppComponent]
+	})
+	export class AppModule { }
+
+Note: RouterModule exposes the routes we configure. Before we can navigate to a route, we should ensure that the routes are available to the application. We do this by passing routes to the router module in the imports array like below.
+
+	imports: [
+		BrowserModule,FormsModule,HttpClientModule,RouterModule.forRoot([]);
+	]
+
+Note: We pass the array of routes to the above method(forRoot([]). This establishes routes for root of our application. If we want, hash styled instead of HTML 5, 
+
+	RouterModule.forRoot([],{useHash: true})
+
+2)Lets configure some routes.
+
+    RouterModule.forRoot(
+      [
+        {path: 'products', component: ProductListComponent},
+        {path: 'welcome', component: WelcomeComponent},
+        {path: '', redirectTo:'welcome', pathMatch:'full'}
+		{path: '**', component: PageNotFoundComponent}
+      ])
+
+Note: The path properties don't start with a slash. The order of the path's in the array matters. The first one matches wins.
+
+3)Lets make the change in the index.html. The first thing to configure routes in angular is to add the below tag in the header.
+
+	<base href="/">
+
+Note: The above base element tells angular how to compose the navigation urls.
+
+Tying the routes to actions
+---------------------------	
+1)Make changes to app.component to add the router links. Consider the below code.
+
+	@Component({
+	  selector: 'pm-root',
+	  template:`
+		<div>
+		  <nav class='navbar navbar-default'>
+			<div class='container-fluid'>
+				<a class='navbar-brand'>{{pageTitle}}</a>
+				<ul class='nav navbar-nav'>
+				  <li><a [routerLink]="['/welcome']">Home</a></li>
+				  <li><a [routerLink]="['/products']">Product List</a></li>
+				</ul>
+			</div>    
+		   </nav> 
+		</div>
+		<div class='container'>
+		  <router-outlet></router-outlet>
+		</div>
+	`
+	})
+	export class AppComponent {
+	  pageTitle: string = 'Acme Product Management';
+	}
+
+
+Note: routerLink is an attribute directive with array of values. First parameter is the path. Additional parameters can be added to specify optional route parameters.
+
+Note: When a router is activated, the associated components view is displayed. We use router-outlet directive for this. In the above example, we display the activated router components template just below the host component template.
+
+2)As we are navigating to product list view using router, lets remove the <pm-products> selector from product list component.
+
+Passing Parameters to a route
+-----------------------------
+If we want to display a products detail page, we need to pass the productid as a paramter to the route. Here are the steps to do this.
+1)Add the below route to existing app module routes.
+	
+	{path: 'products/:id', component: ProductDetailComponent}
+
+2)Add the below routerLink directive in product-list.component.html.
+
+    <td><a [routerLink]="['/products',product.productId]"> {{product.productName}} </a></td>
+	
+3)For reading parameters from a route, make the below change in product-detail.component.ts file.
+
+	import { ActivatedRoute } from '@angular/router';
+	export class ProductDetailComponent implements OnInit {
+		constructor(private _route: ActivatedRoute) {
+			console.log(this._route.snapshot.paramMap.get('id'));
+		}
+	}
+
+Note: You can also get the parameter in onInit() method. In the above example we use snaphost variable of the ActivatedRoute service to get the parameter. Incase, if you have next button to navigate to the next item, you should use observable for this to get the next item productId.
+	
+4)Lets modify the product-detail.component.ts onInit() method to display some hard coded data like below for now.
+
+  ngOnInit() {
+    let id=+this._route.snapshot.paramMap.get('id');
+    this.pageTitle=`${id}`;
+    this.product={
+      "productId": id,
+      "productName": "Leaf Rake",
+      "productCode": "GDN-0011",
+      "releaseDate": "March 19, 2016",
+      "description": "Leaf rake with 48-inch wooden handle.",
+      "price": 19.95,
+      "starRating": 3.2,
+      "imageUrl": "http://openclipart.org/image/300px/svg_to_png/26215/Anonymous_Leaf_Rake.png"
+    };
+
+Note: the '+' in the variable declration is javascript shortcut to convert a string into a numeric id.
+
+Activating a route with code
+----------------------------
+Consider the example of displaying a product on product detail page and navigating back to the previous page.  
+
+1)To route with code we use the Router service. Consider the below code snippet.
+	
+	import { Router } from '@angular/router';
+	
+    constructor(private _route: ActivatedRoute, private _router: Router) {
+	}	
+
+    onBack(): void{
+      this._router.navigate(['/products']);    
+    }
+
+2)Lets make the product-detail.component.html file to include back button. Consider the below code snippet.
+
+	<div class='panel-footer'>
+		<a class='btn btn-default' (click)='onBack()' style='width:80px'>
+		  <i class='glyphicon glyphicon-chevron-left'></i> Back
+		</a>
+	</div>
+
+3)Lets make below product service change.
+
+    import 'rxjs/add/operator/map';
+	
+    getProducts(): Observable<IProduct[]>{
+        return this._http.get<IProduct[]>(this._productURL)
+                .do(data => console.log(JSON.stringify(data)))
+                .catch(this.handleError);    
+    }
+
+    getProduct(id: number): Observable<IProduct>{
+        return this.getProducts().map((products: IProduct[]) => products.find(p => p.productId === id));
+    }
+
+4)Inject the ProductService into product-detail component. Consider the below code snippet.
+	
+	import { ProductService } from './product.service';
+	export class ProductDetailComponent implements OnInit {
+	   pageTitle: string='Product Detail';
+	   product: IProduct;
+	   errorMessage: string;
+
+	  constructor(private _route: ActivatedRoute, 
+				  private _router: Router,
+				  private _productService: ProductService) {}
+				  
+      ngOnInit() {
+		const param = this._route.snapshot.paramMap.get('id');
+		if (param) {
+		  const id = +param;
+		  this.getProduct(id);
+		}
+	  }
+
+	  getProduct(id: number){
+		this._productService.getProduct(id).subscribe(
+		  product => this.product = product,
+		  error => this.errorMessage = <any>error);
+	  }
+  }
+
+5)Add the below template to product-detail component html to display the product details.  
+  
+  <div class='panel-body'>
+      <div class='row'>
+          <div class='col-md-6'>
+              <div class='row'>
+                  <div class='col-md-3'>Name:</div>
+                  <div class='col-md-6'>{{product.productName}}</div>
+              </div>
+              <div class='row'>
+                  <div class='col-md-3'>Code:</div>
+                  <div class='col-md-6'>{{product.productCode | lowercase | convertToSpaces: '-'}}</div>
+              </div>
+              <div class='row'>
+                  <div class='col-md-3'>Description:</div>
+                  <div class='col-md-6'>{{product.description}}</div>
+              </div>
+              <div class='row'>
+                  <div class='col-md-3'>Availability:</div>
+                  <div class='col-md-6'>{{product.releaseDate}}</div>
+              </div>
+              <div class='row'>
+                  <div class='col-md-3'>Price:</div>
+                  <div class='col-md-6'>{{product.price|currency:'USD':true}}</div>
+              </div>
+              <div class='row'>
+                  <div class='col-md-3'>5 Star Rating:</div>
+                  <div class='col-md-6'>
+                      <pm-star [rating]='product.starRating'>
+                      </pm-star>
+                  </div>
+              </div>
+          </div>
+
+          <div class='col-md-6'>
+              <img class='center-block img-responsive' 
+                   [style.width.px]='200' 
+                   [style.margin.px]='2' 
+                   [src]='product.imageUrl'
+                   [title]='product.productName'>
+          </div>
+      </div>
+  </div>	
+	
+Protected routes with guards
+----------------------------
+	
