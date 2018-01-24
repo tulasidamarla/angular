@@ -723,34 +723,34 @@ A component has lifecycle managed by angular. Here are the steps.<br>
 
 Angular provides a set of lifecycle hooks we can use to tap into these lifecycle and perform operations as needed. Here is the list.
 
-1)ngOnChanges()	
-Respond when Angular (re)sets data-bound input properties. The method receives a SimpleChanges object of current and previous property values.
-Called before ngOnInit() and whenever one or more data-bound input properties change.
-2)ngOnInit()	
-Initialize the directive/component after Angular first displays the data-bound properties and sets the directive/component's input properties.
-Called once, after the first ngOnChanges().
-3)ngDoCheck()	
-Detect and act upon changes that Angular can't or won't detect on its own.
-Called during every change detection run, immediately after ngOnChanges() and ngOnInit().
-4)ngAfterContentInit()	
-Respond after Angular projects external content into the component's view.
-Called once after the first ngDoCheck().
-A component-only hook.
-5)ngAfterContentChecked()	
-Respond after Angular checks the content projected into the component.
-Called after the ngAfterContentInit() and every subsequent ngDoCheck().
-A component-only hook.
-6)ngAfterViewInit()	
-Respond after Angular initializes the component's views and child views.
-Called once after the first ngAfterContentChecked().
-A component-only hook.
-7)ngAfterViewChecked()	
-Respond after Angular checks the component's views and child views.
-Called after the ngAfterViewInit and every subsequent ngAfterContentChecked().
-A component-only hook.
-8)ngOnDestroy()	
+1)ngOnChanges()	<br>
+Respond when Angular (re)sets data-bound input properties. The method receives a SimpleChanges object of current and previous property values.<br>
+Called before ngOnInit() and whenever one or more data-bound input properties change.<br>
+2)ngOnInit()	<br>
+Initialize the directive/component after Angular first displays the data-bound properties and sets the directive/component's input properties.<br>
+Called once, after the first ngOnChanges().<br>
+3)ngDoCheck()	<br>
+Detect and act upon changes that Angular can't or won't detect on its own.<br>
+Called during every change detection run, immediately after ngOnChanges() and ngOnInit().<br>
+4)ngAfterContentInit()	<br>
+Respond after Angular projects external content into the component's view.<br>
+Called once after the first ngDoCheck().<br>
+A component-only hook.<br>
+5)ngAfterContentChecked()<br>	
+Respond after Angular checks the content projected into the component.<br>
+Called after the ngAfterContentInit() and every subsequent ngDoCheck().<br>
+A component-only hook.<br>
+6)ngAfterViewInit()	<br>
+Respond after Angular initializes the component's views and child views.<br>
+Called once after the first ngAfterContentChecked().<br>
+A component-only hook.<br>
+7)ngAfterViewChecked()	<br>
+Respond after Angular checks the component's views and child views.<br>
+Called after the ngAfterViewInit and every subsequent ngAfterContentChecked().<br>
+A component-only hook.<br>
+8)ngOnDestroy()	<br>
 Cleanup just before Angular destroys the directive/component. Unsubscribe Observables and detach event handlers to avoid memory leaks.
-Called just before Angular destroys the directive/component.
+Called just before Angular destroys the directive/component.<br>
 
 OnInit Demo
 -----------
