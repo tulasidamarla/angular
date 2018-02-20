@@ -394,7 +394,7 @@ Directives
 A Directive is nothing but custom HTML element or attribute used to powerup or extend HTML.
 We can build our own Directives(Custom) or Angular Built-in directives. In the above example, we have created Custom directive <pm-products>. Let's see some of the angular built-in directives.
 
-Let's see the Angular's structural built-in directives like *ngIf,*ngFor. These are called structural because these will modify the structure of the template or view by adding,removing and manipulating child elements. Structural directives start with a '*'.
+Let's see the Angular's structural built-in directives like *ngIf,*ngFor. These are called structural because these will modify the structure of the template or view by adding,removing and manipulating child elements. Structural directives start with a *.
 
 *ngIf
 -----
