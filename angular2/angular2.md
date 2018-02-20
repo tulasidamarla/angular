@@ -25,7 +25,7 @@ Component
 ---------
 A component consists of a Template, Class and Metadata.<br>
 1)Template is nothing but html fragment used to define view for the application.<br>
-2)Class consists of properties(or datafields) used in the view and methods which perform action for the view such as button click etc.
+2)Class consists of properties(or datafields) used in the view and methods which perform action for the view such as button click etc.<br>
 3)Metadata provides additional information about the component to Angular. It is this metadata that identifies the class as angular component.
 
 Angular Modules
@@ -37,17 +37,17 @@ Selecting a language
 When building an angular application we have few language choices available. The most obvious choice is javascript. Let's see some background about javascript language specification.
 
 Javascript language specification standard is officially called as ECMAScript(ES). Until recently ES versions were defined using a sequential number. Consider the following versions.<br>
-1)ES 3 was supported by older browsers.
-2)ES 5 is currently supported by most modern browsers.
+1)ES 3 was supported by older browsers.<br>
+2)ES 5 is currently supported by most modern browsers.<br>
 3)ES 6 specification was recently approved. It was renamed to ES 2015. 
 
 *****
 Note: Most browsers not yet support ES 2015. So, ES 2015 code must be transpiled to ES 5 code. That means code written in ES 2015 must be compiled by a tool that converts ES 2015 syntax to ES 5 syntax, before the browser executes it. This way developers get the benefit of new ES 2015 productivity features and the browsers still get the code they understand.
 
-so, Here are the choices of language for an angular application.
-1)ES 5 -> Runs in browser, no compile required.
-2)ES 2015 -> Lots of new features like classes,let, arrow etc. But transpiler needed.
-3)Typescript -> Typescript is a superset of javascript. This also needs to be transpiled. One of the key benefits of typescript over others is it's strong typing.i.e. everything has a data type. 
+so, Here are the choices of language for an angular application.<br>
+1)ES 5 -> Runs in browser, no compile required.<br>
+2)ES 2015 -> Lots of new features like classes,let, arrow etc. But transpiler needed.<br>
+3)Typescript -> Typescript is a superset of javascript. This also needs to be transpiled. One of the key benefits of typescript over others is it's strong typing.i.e. everything has a data type. <br>
 4)Dart --> It is a non-javascript based language for building angular applications.
 
 Note: Because of the strong typing it has great tooling including inline documentation,syntax checking, code navigation and advanced refactorings etc. Angular team has taken all these benefits and infact angular2 was developed using typescript. Most of the demo code in angular documentation also uses typescript code. For this reasons, typescript is the language of choice for many angular developers.
@@ -75,12 +75,12 @@ we can setup an angular application in multiple ways like below.
 
 Manual 
 ------
-Setting up an angular application requires the following steps.
-1)Create an application folder
-2)add package definition(package.json) and configuration files(tsconfig.json,tslint.json etc.).
-3)install the packages using npm.
-4)create the app's angular module, because every angular app requires atleast one angular module.
-5)create main.ts file to load that angular module.
+Setting up an angular application requires the following steps.<br>
+1)Create an application folder<br>
+2)add package definition(package.json) and configuration files(tsconfig.json,tslint.json etc.).<br>
+3)install the packages using npm.<br>
+4)create the app's angular module, because every angular app requires atleast one angular module.<br>
+5)create main.ts file to load that angular module.<br>
 6)create the host webpage, normally index.html
 
 Angular Quick start
@@ -102,8 +102,8 @@ Modules
 -------
 Javascript always has the problem of namespaces. If we are not careful,we end up with variables and functions in global namespace. In addition to this, javascript did not provide features to help with code organization. Modules help in resolving these issues.
 
-1)Angularjs has modules to help us organize our code and resolve some namespacing issues. 
-2)Typescript also has modules that help keeping the variables out of the global namespace.
+1)Angularjs has modules to help us organize our code and resolve some namespacing issues. <br>
+2)Typescript also has modules that help keeping the variables out of the global namespace.<br>
 3)ES 2015 set a standard for defining modules. As per ES 2015 a module is a file. So, when you code in ES 2015, we don't need to define a module. i.e. create a file, write some code, then export or import something. that's it. A file becomes a module.
 
 Note: Angular levarages ES 2015 standars. so, when we create code files and then import or export something we create modules for our application.
@@ -223,7 +223,7 @@ app.module.ts
 
 Note: Our AppModule is identified as angular module using @NgModule() decorator. For the NgModule decorator, the properties are arrays. 
 1)In the declarations we have defined which components are part of this module.i.e. AppComponent. <br>
-2)In the imports array we define the external modules that we want to available for all of the components that belong tho this angular module. External modules are modules provided by angular or 3rd party or our custom modules. Here we used BrowserModule, which every browser application must import. BrowserModule registers important application service providers such as error handling.
+2)In the imports array we define the external modules that we want to available for all of the components that belong tho this angular module. External modules are modules provided by angular or 3rd party or our custom modules. Here we used BrowserModule, which every browser application must import. BrowserModule registers important application service providers such as error handling.<br>
 3)bootstrap array defines the startup component of the application. It should contain the selector we used in the index.html.
 
 Templates,Interpolation and Directives
