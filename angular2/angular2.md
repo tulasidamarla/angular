@@ -12,9 +12,9 @@ There are lots of javascript frameworks out there. Here are few reasons for choo
 Why new Angular
 ---------------
 With so many developers already using angular why new angular. Here are few reasons.<br>
-1)Angular is built for speed. It has faster initial loads, faster change detection and improved rendering times.
-2)Angular is modern, so it has to take advantage of modern javascript standards such as classes, ,modules and decorators etc, yet it supports both greenfield and legacy browsers.
-3)Angular has a simplied api. It has few built-in directives to learn, simpler bindings and lower overall concept count.
+1)Angular is built for speed. It has faster initial loads, faster change detection and improved rendering times.<br>
+2)Angular is modern, so it has to take advantage of modern javascript standards such as classes, ,modules and decorators etc, yet it supports both greenfield and legacy browsers.<br>
+3)Angular has a simplied api. It has few built-in directives to learn, simpler bindings and lower overall concept count.<br>
 4)Angular enhances productivity to improve day to day workflow. 
 
 Anatomy of an Angular applications
