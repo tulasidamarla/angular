@@ -1357,19 +1357,19 @@ Note: You can also get the parameter in onInit() method. In the above example we
 	
 4)Lets modify the product-detail.component.ts onInit() method to display some hard coded data like below for now.
 
-  ngOnInit() {
-    let id=+this._route.snapshot.paramMap.get('id');
-    this.pageTitle=`${id}`;
-    this.product={
-      "productId": id,
-      "productName": "Leaf Rake",
-      "productCode": "GDN-0011",
-      "releaseDate": "March 19, 2016",
-      "description": "Leaf rake with 48-inch wooden handle.",
-      "price": 19.95,
-      "starRating": 3.2,
-      "imageUrl": "http://openclipart.org/image/300px/svg_to_png/26215/Anonymous_Leaf_Rake.png"
-    };
+	  ngOnInit() {
+	    let id=+this._route.snapshot.paramMap.get('id');
+	    this.pageTitle=`${id}`;
+	    this.product={
+	      "productId": id,
+	      "productName": "Leaf Rake",
+	      "productCode": "GDN-0011",
+	      "releaseDate": "March 19, 2016",
+	      "description": "Leaf rake with 48-inch wooden handle.",
+	      "price": 19.95,
+	      "starRating": 3.2,
+	      "imageUrl": "http://openclipart.org/image/300px/svg_to_png/26215/Anonymous_Leaf_Rake.png"
+	    };
 
 Note: the '+' in the variable declration is javascript shortcut to convert a string into a numeric id.
 
